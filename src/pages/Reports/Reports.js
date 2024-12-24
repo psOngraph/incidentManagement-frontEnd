@@ -1,39 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Search, Plus, ArrowLeft, Download } from "lucide-react";
 
 import Header from "../../components/Header";
 import IncidentCard from "../../components/IncidentCard";
 import Map from "../../components/Map";
-
-const mockIncidents = [
-  {
-    id: 1,
-    type: "Animal Hazard",
-    severity: "High",
-    time: "15 min",
-    location: "8124 PX Wesepe, Netherlands",
-  },
-  {
-    id: 2,
-    type: "Weather Condition",
-    severity: "Low",
-    time: "23 min",
-    location: "CG Roosweg, Lekkerkerk, Netherlands",
-  },
-  {
-    id: 3,
-    type: "Traffic Accident",
-    severity: "Medium",
-    time: "35 min",
-    location: "Eisenhowerlaan Eindhoven, Netherlands",
-  },
-];
+import axiosInstance from "../../utils/ApiCaller";
+import { incidentEndPoint } from "../../utils/endpoint";
 
 export default function Reports() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [incidents] = useState(mockIncidents);
-
+  const [incidents, setIncidents] = useState([]);
+  useEffect(() => {
+    handleReport();
+  }, [searchQuery]);
+  const handleReport = async () => {
+    try {
+      axiosInstance
+        .get(`${incidentEndPoint}?search=${searchQuery}`)
+        .then((res) => {
+          console.log(res.data);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />

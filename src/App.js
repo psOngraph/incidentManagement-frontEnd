@@ -8,7 +8,7 @@ import {
 import { Dashboard, Reports, SignIn } from "./pages";
 
 function App() {
-  const isAuthenticated = true; // localStorage.getItem("authToken");
+  const isAuthenticated = localStorage.getItem("token");
 
   return (
     <Router>

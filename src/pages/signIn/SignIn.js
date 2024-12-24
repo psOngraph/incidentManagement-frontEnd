@@ -4,10 +4,36 @@ import { EyeIcon, EyeOffIcon, Bus } from "lucide-react";
 import { Link } from "react-router-dom";
 import InputBox from "../../components/InputBox";
 import Button from "../../components/Button";
+import axiosInstance from "../../utils/ApiCaller";
+import { loginEndPoint } from "../../utils/endpoint";
 
 export default function SignIn() {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
   const [showPassword, setShowPassword] = useState(false);
-
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+    try {
+      axiosInstance.post(loginEndPoint, formData).then((res) => {
+        console.log(res);
+        localStorage.setItem("token", res.token);
+        window.location.href = "/dashboard";
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const { email, password } = formData || "";
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
       {/* Left side - Bus Image */}
@@ -38,7 +64,7 @@ export default function SignIn() {
               </p>
             </div>
 
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <div className="space-y-2">
                 <label
                   htmlFor="email"
@@ -49,6 +75,8 @@ export default function SignIn() {
                 <InputBox
                   id="email"
                   type="email"
+                  value={email}
+                  onChange={handleChange}
                   placeholder="peter.paul@gmail.com"
                   className="w-full"
                 />
@@ -68,6 +96,9 @@ export default function SignIn() {
                     id="password"
                     type={showPassword ? "text" : "password"}
                     className="w-full pr-10"
+                    value={password}
+                    onChange={handleChange}
+                    placeholder="Enter your password"
                   />
                   <Button
                     type="button"
@@ -91,7 +122,10 @@ export default function SignIn() {
                 </div> */}
               </div>
 
-              <Button className="w-full bg-[#FFD700] hover:bg-[#FFD700]/90 text-black">
+              <Button
+                type="submit"
+                className="w-full bg-[#FFD700] hover:bg-[#FFD700]/90 text-black"
+              >
                 Login
               </Button>
             </form>

@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown, ArrowRight } from "lucide-react";
 
 import Header from "../../components/Header";
 import MetricCard from "../../components/MetricCard";
 import ReportTable from "../../components/ReportTable/index";
+import { socket } from "../../Socket";
 
 const mockReports = [
   {
@@ -25,10 +26,28 @@ const mockReports = [
     resolvedOn: "11/04/2024 12:00:24",
     reportedBy: "John",
   },
-  // Add more mock data as needed
 ];
 
 export default function Dashboard() {
+  const [incident, setIncident] = useState([]);
+  const handleIncidentData = (data) => {
+    setIncident(data);
+  };
+  const handleCount = (data) => {
+    console.log(data);
+  };
+  useEffect(() => {
+    socket.connect();
+    socket.emit("fetchAllIncidents");
+    socket.on("allIncidents", handleIncidentData);
+    socket.emit("fetchAllCounts");
+    socket.on("allCounts", handleCount);
+
+    return () => {
+      socket.off("allIncidents", handleIncidentData);
+      socket.off("allCounts", handleCount);
+    };
+  }, []);
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -72,7 +91,7 @@ export default function Dashboard() {
 
         <div className="bg-white rounded-lg p-6">
           <h2 className="text-xl font-semibold mb-4">Live Reports</h2>
-          <ReportTable reports={mockReports} />
+          <ReportTable reports={incident} />
         </div>
       </main>
     </div>

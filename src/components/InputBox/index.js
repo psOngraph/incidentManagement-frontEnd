@@ -1,6 +1,7 @@
 import React from "react";
 
 const InputBox = ({
+  id = "",
   value,
   onChange,
   type = "text",
@@ -9,6 +10,7 @@ const InputBox = ({
 }) => {
   return (
     <input
+      id={id}
       type={type}
       value={value}
       onChange={onChange}

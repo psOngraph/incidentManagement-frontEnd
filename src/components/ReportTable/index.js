@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { MoreVertical, Eye } from "lucide-react";
 import StatusBadge from "../StatusBadge";
+import { formatDate } from "../../utils/clsxFunc";
 
 export default function ReportTable({ reports }) {
   return (
@@ -25,7 +26,7 @@ export default function ReportTable({ reports }) {
               Resolved on
             </th>
             <th className="py-3 px-4 text-left text-sm font-medium text-gray-500">
-              Reported by
+              Category
             </th>
             <th className="py-3 px-4 text-left text-sm font-medium text-gray-500">
               Actions
@@ -36,15 +37,19 @@ export default function ReportTable({ reports }) {
           {reports.map((report) => (
             <tr key={report.id} className="border-b hover:bg-gray-50">
               <td className="py-4 px-4 text-sm text-yellow-500">
-                {report.incidentNo}
+                {report.incidentNumber}
               </td>
-              <td className="py-4 px-4 text-sm">{report.incidentType}</td>
+              <td className="py-4 px-4 text-sm">{report.type}</td>
               <td className="py-4 px-4">
                 <StatusBadge severity={report.status} />
               </td>
-              <td className="py-4 px-4 text-sm">{report.reportedOn}</td>
-              <td className="py-4 px-4 text-sm">{report.resolvedOn || "-"}</td>
-              <td className="py-4 px-4 text-sm">{report.reportedBy}</td>
+              <td className="py-4 px-4 text-sm">
+                {formatDate(report.createdAt)}
+              </td>
+              <td className="py-4 px-4 text-sm">
+                {report.updatedAt ? formatDate(report.updatedAt) : "-"}
+              </td>
+              <td className="py-4 px-4 text-sm">{report.category}</td>
               <td className="py-4 px-4">
                 <div className="flex items-center gap-2">
                   <button className="p-1 hover:bg-gray-100 rounded">
