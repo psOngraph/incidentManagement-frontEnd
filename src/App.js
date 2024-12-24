@@ -5,7 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { Dashboard, SignIn } from "./pages";
+import { Dashboard, Reports, SignIn } from "./pages";
 
 function App() {
   const isAuthenticated = true; // localStorage.getItem("authToken");
@@ -22,6 +22,10 @@ function App() {
           element={
             isAuthenticated ? <Dashboard /> : <Navigate to="/" replace />
           }
+        />
+        <Route
+          path="/report"
+          element={isAuthenticated ? <Reports /> : <Navigate to="/" replace />}
         />
 
         {/* Default Route */}
